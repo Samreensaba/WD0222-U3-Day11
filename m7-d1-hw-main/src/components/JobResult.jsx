@@ -3,17 +3,22 @@ import { Row, Col } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import {Star, StarFill} from 'react-bootstrap-icons'
 import { addToFav, removeFromFav } from '../store/actions'
+import {connect} from 'react-redux'
 
-const mapStateToProps = s => s
+const mapStateToProps = (state) => state
 
-const mapDispatchToProps = (dispatch)=> {
-    addToFavourites: (company) =>dispatch(addToFav(company))
+const mapDispatchToProps = (dispatch)=> ({
+    addToFavourites: (company) =>dispatch(addToFav(company)),
     removeFromFavourites: (company) =>dispatch(removeFromFav(company))
-}
+})
 
-const JobResult = ({ data, favouriteCompanies, addToFavourites, removeFromFavourites }) => {
-    const isFav = favouriteCompanies.includes(data.company_name)
-    const toggleFavourite = isFav? addToFavourites : removeFromFavourites
+const JobResult = ({ data, favourites, addToFavourites, removeFromFavourites }) => {
+    const isFav = favourites.includes(data.company_name)
+    const toggleFavourite =()=> {
+    isFav
+    ? removeFromFavourites(data.company_name) 
+    : addToFavourites(data.company_name)
+}
 return(
   <Row
     className="mx-0 mt-3 p-3"
@@ -23,16 +28,17 @@ return(
     {
         isFav
         ?<StarFill color= "gold" className='mr-4' onClick={toggleFavourite}/>
-        :<Star className='mr-4' onClick={toggleFavourite}/>
+        :<Star color='gold' className='mr-4' onClick={toggleFavourite}/>
     }
       <Link to={`/${data.company_name}`}>{data.company_name}</Link>
     </Col>
     <Col xs={9}>
-      <a href={data.url} target="_blank" rel="noreferrer">
-        {data.title}
-      </a>
+    <Link to={{ pathname: data.url }} target="_blank">
+          {data.title}
+        </Link>
     </Col>
   </Row>
 )
 }
-export default JobResult
+export default connect(mapStateToProps, mapDispatchToProps)(JobResult)
+

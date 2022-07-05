@@ -1,20 +1,20 @@
 const initialState = {
-    faviouriteCompanies: []
+    faviourites: []
 }
 
-export default mainReducer(state = initialState, action){
+export default function mainReducer(state = initialState, action){
     const{type, payload} = action
 
     switch(type){
         case 'ADD_TO_FAVOURITE':
         return{
             ...state,
-            faviouriteCompanies:[state.faviouriteCompanies, payload]
+            faviourites:[state.faviourites, payload]
         }
         case 'REMOVE_FROM_FAVOURITE':
             return{
                 ...state,
-                faviouriteCompanies:state.faviouriteCompanies.filter(comanies=> company != payload)
+                faviourites:state.faviourites.filter(company=> company !== payload)
             }
             default:
                 return state
